@@ -307,7 +307,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/imageAccount"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"

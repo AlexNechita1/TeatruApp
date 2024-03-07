@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "347867358127",
+    "project_id": "teatru-app",
+    "storage_bucket": "teatru-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347867358127:android:7c474209f2ed747c95c55a",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApLY5OqZ5d6eDMKT_YttEBwKx8G-k7_Cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

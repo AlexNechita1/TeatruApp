@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import com.example.myapplication.Database;
-import com.example.myapplication.MySingleton;
 import com.example.myapplication.R;
 
 public class IntroActivity extends AppCompatActivity {
@@ -17,8 +14,6 @@ public class IntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-        Database dbReader = new Database();
-        MySingleton.getInstance().setMyObject(dbReader);
 
         Button startBtn=findViewById(R.id.startBtn);
         startBtn.setOnClickListener(new View.OnClickListener() {

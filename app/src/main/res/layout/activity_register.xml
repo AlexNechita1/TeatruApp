@@ -22,7 +22,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Log in"
+                android:text="Register"
                 android:textSize="50sp"
                 android:textColor="@color/white"
                 android:layout_marginTop="126dp"
@@ -30,10 +30,10 @@
                 android:textStyle="bold"/>
 
             <EditText
-                android:id="@+id/editTextUser"
+                android:id="@+id/editTextMail"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="Nume Utilizator"
+                android:hint="E-mail"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
@@ -44,6 +44,7 @@
                 android:layout_marginEnd="32dp"
                 android:inputType="text"
                 />
+
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -65,20 +66,36 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ai uitat parola?"
+                android:text="Adresa"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="32dp"/>
 
+
+            <Spinner
+                android:id="@+id/SpinnerAdresa"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Adresa"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:inputType="text"
+                />
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/progressLogin"
+                android:id="@+id/progressRegister"
                 android:visibility="gone"/>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/loginBtn"
+                android:id="@+id/registerBtn"
                 style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,27 +103,18 @@
                 android:layout_marginTop="64dp"
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/orange_button_background"
-                android:text="Login"
+                android:text="Inregistreaza-te"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nu ai deja cont?"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textAlignment="center"
-                android:layout_marginTop="32dp"/>
 
             <TextView
-                android:id="@+id/TextViewRegister"
+                android:id="@+id/TextViewLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Inregistreza-te"
+                android:text="Inapoi la Login"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"

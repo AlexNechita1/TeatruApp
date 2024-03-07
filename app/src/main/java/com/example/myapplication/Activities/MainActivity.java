@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.myapplication.Adapters.SliderAdapters;
 import com.example.myapplication.Domian.SliderItems;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter adapterBestMovies;
 
     private ViewPager2 viewPager2;
+    private ImageView accountImgView;
     private Handler slideHandler = new Handler();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -84,5 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         private void initView() {
             viewPager2=findViewById(R.id.viewpagerSlider);
+            accountImgView=findViewById(R.id.imageAccount);
+
         }
 }
