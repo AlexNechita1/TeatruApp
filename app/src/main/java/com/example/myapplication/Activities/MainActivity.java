@@ -2,16 +2,26 @@ package com.example.myapplication.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Activities.NavBar.SettingsActivity;
 import com.example.myapplication.Adapters.SliderAdapters;
 import com.example.myapplication.Domian.SliderItems;
 import com.example.myapplication.R;
@@ -21,8 +31,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView.Adapter adapterBestMovies;
-
+    RecyclerView.Adapter adapterActiune,adapterComedie,adapterDrama,adapterRomantism;
+    private RecyclerView recyclerActiune,recyclerComedie, recyclerDrama, recyclerRomantis;
+    private RequestQueue mRequestQueue;
+    private StringRequest mStringRequest,mStringRequest2,mStringrequest3;
+    private ProgressBar loading1,loading2,loading3,loading4;
     private ViewPager2 viewPager2;
     private ImageView accountImgView;
     private Handler slideHandler = new Handler();
@@ -33,9 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
             initView();
             banners();
+            sendRequest();
         }
 
-        private void banners() {
+    private void sendRequest() {
+
+    }
+
+    private void banners() {
             List<SliderItems> sliderItems=new ArrayList<>();
             sliderItems.add(new SliderItems(R.drawable.romeo));
             sliderItems.add(new SliderItems(R.drawable.cantareata));
@@ -85,14 +103,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void initView() {
+            recyclerActiune=findViewById(R.id.view1);
+            recyclerActiune.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            recyclerDrama=findViewById(R.id.view2);
+            recyclerDrama.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            recyclerComedie=findViewById(R.id.view3);
+            recyclerComedie.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            recyclerRomantis=findViewById(R.id.view4);
+            recyclerRomantis.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            loading1=findViewById(R.id.progressBar1);
+            loading2=findViewById(R.id.progressBar2);
+            loading3=findViewById(R.id.progressBar3);
+            loading4=findViewById(R.id.progressBar4);
+
             viewPager2=findViewById(R.id.viewpagerSlider);
             accountImgView=findViewById(R.id.imageAccount);
             accountImgView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 }
             });
+
+
 
         }
 }
