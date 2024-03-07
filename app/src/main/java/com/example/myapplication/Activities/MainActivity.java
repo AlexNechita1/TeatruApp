@@ -87,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
         private void initView() {
             viewPager2=findViewById(R.id.viewpagerSlider);
             accountImgView=findViewById(R.id.imageAccount);
+            accountImgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
         }
 }

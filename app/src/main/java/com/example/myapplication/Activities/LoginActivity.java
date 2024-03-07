@@ -44,7 +44,7 @@ private FirebaseAuth mAuth;
     private void initView() {
         mailEdt =findViewById(R.id.editTextUser);
         passEdt=findViewById(R.id.editTextPassword);
-        loginBtn=findViewById(R.id.loginBtn);
+        loginBtn=findViewById(R.id.signoutBtn);
         registerText=findViewById(R.id.TextViewRegister);
         progressBar=findViewById(R.id.progressLogin);
 
