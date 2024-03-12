@@ -77,7 +77,7 @@ private FirebaseAuth mAuth;
                                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
 
                                 } else {
-                                    // If sign in fails, display a message to the user.
+
 
                                     Toast.makeText(LoginActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
