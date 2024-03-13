@@ -2,8 +2,10 @@ package com.example.myapplication.Adapters;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Activities.DetailActivity;
+import com.example.myapplication.Activities.LoginActivity;
+import com.example.myapplication.Activities.MainActivity;
 import com.example.myapplication.Domian.RecyclerItems;
 import com.example.myapplication.R;
 
@@ -62,6 +67,20 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         } else {
             holder.imageView.setImageResource(R.drawable.hamlet);
         }
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), DetailActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("ITEM_TITLE", item.getTitle());
+
+
+                intent.putExtras(bundle);
+
+                v.getContext().startActivity(intent);
+            }
+        });
         holder.txTitle.setText(item.getTitle());
     }
 
