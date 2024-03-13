@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,21 +33,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView.Adapter adapterActiune,adapterComedie,adapterDrama,adapterRomantism;
-    private RecyclerView recyclerActiune,recyclerComedie, recyclerDrama, recyclerRomantis;
-    private RequestQueue mRequestQueue;
-    private StringRequest mStringRequest,mStringRequest2,mStringrequest3;
-    private ProgressBar loadingActiune, loadingDrama, loadingRomantism, loadingComedie;
+    private RecyclerView recyclerComedie, recyclerDrama, recyclerRomantis;
+
+    private ProgressBar  loadingDrama, loadingRomantism, loadingComedie;
     private ViewPager2 mainSlider;
     private ImageView accountImgView;
 
     private Handler slideHandler = new Handler();
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -59,36 +61,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
     private void initSections() {
-        //Actiune
-        List<RecyclerItems> section1 = new ArrayList<>();
-
-        SectionAdapter adapter = new SectionAdapter(section1);
-        recyclerActiune.setAdapter(adapter);
-        recyclerActiune.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
 
         //Drama
-        List<RecyclerItems> section2 = new ArrayList<>();
-
-        SectionAdapter adapter2 = new SectionAdapter(section2);
-        recyclerDrama.setAdapter(adapter2);
-        recyclerDrama.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
+        getPiese(recyclerDrama,"Drama",loadingDrama);
 
         //Comedie
+        getPiese(recyclerComedie,"Comedie",loadingComedie);
 
-        getPiese(recyclerComedie,"Comedie");
-
-        //Actiune
-        List<RecyclerItems> section4 = new ArrayList<>();
-
-        SectionAdapter adapter4 = new SectionAdapter(section4);
-        recyclerRomantis.setAdapter(adapter);
-        recyclerRomantis.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
+        //Romamtism
+        getPiese(recyclerRomantis,"Romantism",loadingRomantism);
     }
 
-    private void getPiese( RecyclerView view, String gen) {
+    private void getPiese(RecyclerView view, String gen, ProgressBar pBar) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Piese")
@@ -105,19 +89,32 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (imageUrl != null && !imageUrl.isEmpty()) {
                                     Log.d(TAG, name + " " + imageUrl);
-                                    section.add(new RecyclerItems(name, imageUrl));
+                                    StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+                                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String downloadUrl = uri.toString();
+                                            section.add(new RecyclerItems(name, downloadUrl));
+
+                                            if (section.size() == queryDocumentSnapshots.size()) {
+                                                SectionAdapter adapter = new SectionAdapter(section);
+                                                view.setAdapter(adapter);
+                                                view.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                                                pBar.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e(TAG, "Error getting download URL", e);
+                                        }
+                                    });
                                 } else {
                                     Log.w(TAG, "Empty or null imageUrl for document: " + name);
                                 }
-
-
                             } else {
                                 Log.w(TAG, "Error getting documents.");
                             }
-                            SectionAdapter adapter = new SectionAdapter(section);
-                            view.setAdapter(adapter);
-                            view.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
-                            loadingComedie.setVisibility(View.GONE);
                         }
                     }
                 })
@@ -184,12 +181,10 @@ public class MainActivity extends AppCompatActivity {
             mainSlider =findViewById(R.id.viewpagerSlider);
             accountImgView=findViewById(R.id.imageAccount);
 
-            recyclerActiune=findViewById(R.id.viewActiune);
             recyclerComedie=findViewById(R.id.viewComedie);
             recyclerDrama=findViewById(R.id.viewDrama);
             recyclerRomantis=findViewById(R.id.viewRomantism);
 
-            loadingActiune=findViewById(R.id.barActiune);
             loadingDrama=findViewById(R.id.barDrama);
             loadingComedie=findViewById(R.id.barComedie);
             loadingRomantism=findViewById(R.id.barRomantism);
