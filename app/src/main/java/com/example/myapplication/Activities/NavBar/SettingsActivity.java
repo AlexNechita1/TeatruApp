@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +17,12 @@ import com.example.myapplication.Activities.IntroActivity;
 import com.example.myapplication.Activities.MainActivity;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SettingsActivity extends AppCompatActivity {
     private Button signoutBtn;
+    private ImageView bkBtn;
+    private TextView email,uid;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,16 @@ public class SettingsActivity extends AppCompatActivity {
     private void initView() {
         signoutBtn=findViewById(R.id.signoutBtn);
         mAuth= FirebaseAuth.getInstance();
+        bkBtn=findViewById(R.id.backBtn);
+        email=findViewById(R.id.emailTxt);
+        uid=findViewById(R.id.uidTxt);
+
+        bkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+            }
+        });
         signoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,5 +52,16 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(new Intent(SettingsActivity.this, IntroActivity.class));
             }
         });
+
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String uidStr,emailStr;
+        if (currentUser != null) {
+            uidStr = currentUser.getUid();
+            emailStr = currentUser.getEmail();
+            email.setText(emailStr);
+            uid.setText(uidStr);
+
+        }
     }
 }

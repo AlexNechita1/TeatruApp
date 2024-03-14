@@ -48,14 +48,15 @@ private FirebaseAuth mAuth;
         registerText=findViewById(R.id.TextViewRegister);
         progressBar=findViewById(R.id.progressLogin);
 
-        mAuth=FirebaseAuth.getInstance();
 
+        mAuth=FirebaseAuth.getInstance();
         registerText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
             }
         });
+
 
         loginBtn.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);

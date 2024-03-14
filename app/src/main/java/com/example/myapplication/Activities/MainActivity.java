@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.Activities.NavBar.AprecieriActivity;
 import com.example.myapplication.Activities.NavBar.SettingsActivity;
 import com.example.myapplication.Adapters.SectionAdapter;
 import com.example.myapplication.Adapters.SliderAdapters;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar  loadingDrama, loadingRomantism, loadingComedie;
     private ViewPager2 mainSlider;
-    private ImageView accountImgView;
+    private ImageView accountImgView, aprecieriImgView, acasaImgView;
 
     private Handler slideHandler = new Handler();
 
@@ -88,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                                 String imageUrl = document.getString("url");
 
                                 if (imageUrl != null && !imageUrl.isEmpty()) {
-                                    Log.d(TAG, name + " " + imageUrl);
                                     StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
                                     storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
@@ -125,7 +126,54 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+    private List<SliderItems> getTop(){
+        List<SliderItems> sliderItems=new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        db.collection("Piese")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<RecyclerItems> section = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            if (document.exists()) {
+                                String imageUrl = document.getString("url");
+
+                                if (imageUrl != null && !imageUrl.isEmpty()) {
+                                    StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+                                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String downloadUrl = uri.toString();
+                                            //section.add(new SliderItems());
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e(TAG, "Error getting download URL", e);
+                                        }
+                                    });
+                                }
+                            } else {
+                                Log.w(TAG, "Error getting documents.");
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error getting documents", e);
+                    }
+                });
+
+
+
+        return sliderItems;
+
+    }
 
 
     private void banners() {
@@ -180,6 +228,8 @@ public class MainActivity extends AppCompatActivity {
         private void initView() {
             mainSlider =findViewById(R.id.viewpagerSlider);
             accountImgView=findViewById(R.id.imageAccount);
+            aprecieriImgView=findViewById(R.id.imageAprecieri);
+            acasaImgView=findViewById(R.id.imageAcasa);
 
             recyclerComedie=findViewById(R.id.viewComedie);
             recyclerDrama=findViewById(R.id.viewDrama);
@@ -195,6 +245,22 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 }
             });
+
+            aprecieriImgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, AprecieriActivity.class));
+                }
+            });
+
+            acasaImgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+                }
+            });
+
+
 
 
 
