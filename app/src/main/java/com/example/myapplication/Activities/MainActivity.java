@@ -16,9 +16,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Slide;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar  loadingDrama, loadingRomantism, loadingComedie;
     private ViewPager2 mainSlider;
     private ImageView accountImgView, aprecieriImgView, acasaImgView;
+    private EditText search;
 
     private Handler slideHandler = new Handler();
 
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
 
             initView();
-            banners();
+            getTop();
             initSections();
 
         }
@@ -126,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-    private List<SliderItems> getTop(){
-        List<SliderItems> sliderItems=new ArrayList<>();
+    private void getTop(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Piese")
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<RecyclerItems> section = new ArrayList<>();
+                        List<SliderItems> section = new ArrayList<>();
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             if (document.exists()) {
                                 String imageUrl = document.getString("url");
@@ -146,8 +150,11 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             String downloadUrl = uri.toString();
-                                            //section.add(new SliderItems());
+                                            section.add(new SliderItems(downloadUrl));
 
+                                            if (section.size() == queryDocumentSnapshots.size()) {
+                                                banners(section);
+                                            }
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -170,17 +177,15 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-
-        return sliderItems;
-
     }
 
 
-    private void banners() {
-            List<SliderItems> sliderItems=new ArrayList<>();
-            sliderItems.add(new SliderItems(R.drawable.romeo));
+
+    private void banners(List<SliderItems> sliderItems) {
+            //List<SliderItems> sliderItems=getTop();
+            /*sliderItems.add(new SliderItems(R.drawable.romeo));
             sliderItems.add(new SliderItems(R.drawable.cantareata));
-            sliderItems.add(new SliderItems(R.drawable.hamlet));
+            sliderItems.add(new SliderItems(R.drawable.hamlet));*/
 
             mainSlider.setAdapter(new SliderAdapters(sliderItems, mainSlider));
             mainSlider.setClipToPadding(false);
@@ -238,6 +243,28 @@ public class MainActivity extends AppCompatActivity {
             loadingDrama=findViewById(R.id.barDrama);
             loadingComedie=findViewById(R.id.barComedie);
             loadingRomantism=findViewById(R.id.barRomantism);
+
+            search=findViewById(R.id.editSearch);
+            search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_NULL) {
+                        Intent intent = new Intent(v.getContext(), SearchActivity.class);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("SEARCH_TEXT", search.getText().toString());
+
+
+                        intent.putExtras(bundle);
+
+                        v.getContext().startActivity(intent);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
 
             accountImgView.setOnClickListener(new View.OnClickListener() {
                 @Override
