@@ -37,14 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initView();
-        Spinner spinner = (Spinner) findViewById(R.id.SpinnerAdresa);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.planets_array,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
     }
 
@@ -53,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         passEdt=findViewById(R.id.editTextPassword);
         registerBtn=findViewById(R.id.registerBtn);
         loginTxt=findViewById(R.id.TextViewLogin);
-        progressBar=findViewById(R.id.progressRegister);
+        progressBar=findViewById(R.id.pBar);
 
         mAuth=FirebaseAuth.getInstance();
 
@@ -80,14 +72,13 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        progressBar.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        registerBtn.setVisibility(View.GONE);
                                         Toast.makeText(RegisterActivity.this, "Cont creat cu succes", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
 
                                     } else {
-                                        // If sign in fails, display a message to the user.
-
-                                        Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                        Toast.makeText(RegisterActivity.this, "Inregistrarea nu a avut succes.",
                                                 Toast.LENGTH_SHORT).show();
 
                                     }

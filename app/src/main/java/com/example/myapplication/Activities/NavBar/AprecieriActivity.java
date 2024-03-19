@@ -44,8 +44,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AprecieriActivity extends AppCompatActivity {
-    RecyclerView recycler;
-    ImageView bkBtn;
+    private RecyclerView recycler;
+    private ImageView bkBtn;
+    private ProgressBar pbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class AprecieriActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
+        pbar=findViewById(R.id.pBar);
         bkBtn = findViewById(R.id.backBtn);
         bkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +133,7 @@ public class AprecieriActivity extends AppCompatActivity {
                                                 AprecieriAdapter adapter = new AprecieriAdapter(section);
                                                 view.setAdapter(adapter);
                                                 view.setLayoutManager(new LinearLayoutManager(AprecieriActivity.this, LinearLayoutManager.VERTICAL, false));
+                                                pbar.setVisibility(View.GONE);
 
                                             }
                                         }

@@ -38,6 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         email=findViewById(R.id.emailTxt);
         uid=findViewById(R.id.uidTxt);
 
+
         bkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

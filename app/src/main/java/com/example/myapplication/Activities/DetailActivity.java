@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -45,6 +46,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView piesaImg, bkBtn;
     boolean piesaApreciata;
     private String apreciate[];
+    private ProgressBar pBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
         piesaImg = findViewById(R.id.piesaImg);
         bkBtn = findViewById(R.id.backBtn);
         apreciazaBtn = findViewById(R.id.aprecieriTxt);
+        pBar= findViewById(R.id.pBar);
 
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -150,6 +153,7 @@ public class DetailActivity extends AppCompatActivity {
                                             descTxt.setText(descriere);
                                             aprecieriTxt.setText(aprecieri);
                                             durataTxt.setText(durata);
+                                            pBar.setVisibility(View.GONE);
 
 
                                         }

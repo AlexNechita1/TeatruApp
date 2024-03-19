@@ -44,9 +44,9 @@ private FirebaseAuth mAuth;
     private void initView() {
         mailEdt =findViewById(R.id.editTextUser);
         passEdt=findViewById(R.id.editTextPassword);
-        loginBtn=findViewById(R.id.signoutBtn);
+        loginBtn=findViewById(R.id.loginBtn);
         registerText=findViewById(R.id.TextViewRegister);
-        progressBar=findViewById(R.id.progressLogin);
+        progressBar=findViewById(R.id.pBar);
 
 
         mAuth=FirebaseAuth.getInstance();
@@ -73,16 +73,14 @@ private FirebaseAuth mAuth;
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
 
-                                    progressBar.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    loginBtn.setVisibility(View.GONE);
                                     Toast.makeText(LoginActivity.this, "Autentificare cu succes", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
 
                                 } else {
-
-
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.makeText(LoginActivity.this, "Autentificarea nu a avut succes.",
                                             Toast.LENGTH_SHORT).show();
-
                                 }
                             }
                         });

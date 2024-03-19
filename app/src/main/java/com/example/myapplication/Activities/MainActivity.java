@@ -36,6 +36,10 @@ import com.example.myapplication.Domian.SliderItems;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerComedie, recyclerDrama, recyclerRomantis;
 
-    private ProgressBar  loadingDrama, loadingRomantism, loadingComedie;
+    private ProgressBar  loadingDrama, loadingRomantism, loadingComedie, loadingSlider;
     private ViewPager2 mainSlider;
     private ImageView accountImgView, aprecieriImgView, acasaImgView;
     private EditText search;
@@ -182,11 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void banners(List<SliderItems> sliderItems) {
-            //List<SliderItems> sliderItems=getTop();
-            /*sliderItems.add(new SliderItems(R.drawable.romeo));
-            sliderItems.add(new SliderItems(R.drawable.cantareata));
-            sliderItems.add(new SliderItems(R.drawable.hamlet));*/
-
             mainSlider.setAdapter(new SliderAdapters(sliderItems, mainSlider));
             mainSlider.setClipToPadding(false);
             mainSlider.setClipChildren(false);
@@ -210,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     slideHandler.removeCallbacks(slideRunnable);
                 }
             });
+            loadingSlider.setVisibility(View.GONE);
         }
         private Runnable slideRunnable=new Runnable() {
             @Override
@@ -243,12 +243,14 @@ public class MainActivity extends AppCompatActivity {
             loadingDrama=findViewById(R.id.barDrama);
             loadingComedie=findViewById(R.id.barComedie);
             loadingRomantism=findViewById(R.id.barRomantism);
+            loadingSlider=findViewById(R.id.barSlider);
 
             search=findViewById(R.id.editSearch);
             search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_NULL) {
+
                         Intent intent = new Intent(v.getContext(), SearchActivity.class);
 
                         Bundle bundle = new Bundle();
@@ -258,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtras(bundle);
 
                         v.getContext().startActivity(intent);
+
                         return true;
                     }
                     return false;
