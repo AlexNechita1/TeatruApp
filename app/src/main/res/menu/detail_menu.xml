@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item1"
+        android:title="Facebook"
+        android:icon="@drawable/blackfb" />
+    <item
+        android:id="@+id/menu_item2"
+        android:title="Instagram"
+        android:icon="@drawable/blackinsta"/>
+    <item
+        android:id="@+id/Whatsapp"
+        android:icon="@drawable/blackwhatsapp"
+        android:title="item"/>
+
+</menu>
+
+

@@ -61,6 +61,18 @@
                     app:layout_constraintTop_toTopOf="parent"
                      />
 
+                <ImageView
+                    android:id="@+id/popup"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/oval_btn_background"
+                    android:padding="8dp"
+                    android:src="@drawable/share"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

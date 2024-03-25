@@ -6,15 +6,22 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.MenuProvider;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,26 +44,37 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
     private TextView titluTxt,descTxt,aprecieriTxt,durataTxt,apreciazaBtn;
-    private ImageView piesaImg, bkBtn;
+    private ImageView piesaImg, bkBtn, popupBtn;
     boolean piesaApreciata;
     private String apreciate[];
     private ProgressBar pBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
+
         Bundle extras = getIntent().getExtras();
         String titlu = extras.getString("ITEM_TITLE");
         initView(titlu);
 
     }
+
+
+
+
+
     public boolean arrayContainsString(String[] array, String targetString) {
         for (String element : array) {
             if (element.equals(targetString)) {
@@ -66,6 +84,33 @@ public class DetailActivity extends AppCompatActivity {
         return false;
     }
 
+    public void showPopupMenuWithIcon(View view) {
+        PopupMenu popup = new PopupMenu(DetailActivity.this, view);
+        try {
+            Field[] fields = popup.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popup);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon",boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        popup.getMenuInflater().inflate(R.menu.detail_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getApplicationContext(), "You Clicked : " + item.getTitle(),  Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        popup.show();
+    }
     private void initView(String titlu) {
         titluTxt = findViewById(R.id.titluPiesaTxt);
         descTxt = findViewById(R.id.descTxt);
@@ -76,6 +121,11 @@ public class DetailActivity extends AppCompatActivity {
         apreciazaBtn = findViewById(R.id.aprecieriTxt);
         pBar= findViewById(R.id.pBar);
 
+        popupBtn=findViewById(R.id.popup);
+        popupBtn.setOnClickListener(v -> {
+            showPopupMenuWithIcon(v);
+        });;
+
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -83,8 +133,6 @@ public class DetailActivity extends AppCompatActivity {
         String uid = "";
         if (currentUser != null) {
             uid = currentUser.getUid();
-            Log.d(TAG, "user: " + uid);
-
             db.collection("users").document(uid)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -94,7 +142,6 @@ public class DetailActivity extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     String aprecieri = document.getString("apreciate");
-                                    Log.d(TAG, "Apreciere: " + aprecieri);
                                     String[] piese = aprecieri.split(",");
                                     apreciate=piese;
                                     if(arrayContainsString(piese,titlu)) {
@@ -104,8 +151,6 @@ public class DetailActivity extends AppCompatActivity {
                                         piesaApreciata = false;
                                     }
 
-                                } else {
-                                    Log.d(TAG, "No such document");
                                 }
                             } else {
                                 Log.d(TAG, "get failed with ", task.getException());
@@ -133,16 +178,12 @@ public class DetailActivity extends AppCompatActivity {
                                 String descriere = document.getString("desc");
                                 String aprecieri = document.getString("aprecieri");
                                 String durata = document.getString("durata");
-
                                 if (imageUrl != null && !imageUrl.isEmpty()) {
-                                    Log.d(TAG, titlu + " " + imageUrl);
                                     StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
                                     storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             String downloadUrl = uri.toString();
-
-
                                             Glide.with(piesaImg.getContext())
                                                     .load(downloadUrl)
                                                     .placeholder(R.drawable.fav)
@@ -154,8 +195,6 @@ public class DetailActivity extends AppCompatActivity {
                                             aprecieriTxt.setText(aprecieri);
                                             durataTxt.setText(durata);
                                             pBar.setVisibility(View.GONE);
-
-
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -183,11 +222,7 @@ public class DetailActivity extends AppCompatActivity {
         apreciazaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
                 db.collection("Piese")
                         .whereEqualTo("den", titlu)
                         .get()
@@ -204,7 +239,6 @@ public class DetailActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            Log.d(TAG, "DocumentSnapshot successfully updated!");
                                                             aprecieriTxt.setText(newValue);
                                                             aprecieriTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baselinewhite_favorite_24, 0, 0, 0);
                                                             piesaApreciata=false;
@@ -231,7 +265,6 @@ public class DetailActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            Log.d(TAG, "DocumentSnapshot successfully updated!");
                                                             aprecieriTxt.setText(newValue);
                                                             aprecieriTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_favorite_24, 0, 0, 0);
                                                             piesaApreciata=true;
@@ -275,4 +308,6 @@ public class DetailActivity extends AppCompatActivity {
         });
 
     }
+
+
 }
